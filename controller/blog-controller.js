@@ -131,6 +131,36 @@ export const getByUserId = async (req, res, next) => {
 
 }
 
+
+// string function
+
+function indent(str) {
+    var tokens = str.match(/!|,|pyjamas|(?:(?!pyjamas)[^!,])+/g);
+    var depth = 0;
+    var result = '';
+    for (var i = 0; i < tokens.length; ++i) {
+        var token = tokens[i];
+        switch (token) {
+            case '!':
+                ++depth;
+                result += token + '\n' ;
+                break;
+            case ',':
+                --depth;
+                result += '\n' + token;
+                break;
+            case 'blog:':
+                result += token + '\n';
+                break;
+            default:
+                result += token;
+                break;
+        }
+    }
+    return result;
+}
+
+
 export const getBlogText = async (req, res, next) => {
     const userId = req.params.id;
     let userBlog;
@@ -146,6 +176,12 @@ export const getBlogText = async (req, res, next) => {
 
     var text = JSON.stringify({ blog: userBlog["blogs"] });
     res.set({ "Content-Disposition": "attachment; filename=\"blogs.txt\"" });
+    text = indent(text)
+    text = text.replace(/[,"]/g, ' ');
+    text = text.replaceAll("{", "");
+    text = text.replaceAll("[", "");
+    text = text.replaceAll("}", "\n");
+    text = text.replaceAll("]", "\n");
     return res.send(text);
 
 }
