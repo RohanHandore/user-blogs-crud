@@ -130,3 +130,20 @@ export const getByUserId = async (req, res, next) => {
     
     
 }
+
+export const getBlogText = async (req, res, next) => {
+    const userId = req.params.id;
+    let userBlog;
+    try{
+        userBlog = await User.findById(userId).populate("blogs")
+    }
+    catch(err){
+        console.log(err);
+    }
+    if(!userBlog){
+        return res.status(404).json({message: "no blog found"});
+    }
+    return res.status(200).json({blog:userBlog["blogs"]});
+    
+    
+}
