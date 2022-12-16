@@ -174,14 +174,34 @@ export const getBlogText = async (req, res, next) => {
         return res.status(404).json({ message: "no blog found" });
     }
 
-    var text = JSON.stringify({ blog: userBlog["blogs"] });
-    res.set({ "Content-Disposition": "attachment; filename=\"blogs.txt\"" });
-    text = indent(text)
-    text = text.replace(/[,"]/g, ' ');
-    text = text.replaceAll("{", "");
-    text = text.replaceAll("[", "");
-    text = text.replaceAll("}", "\n");
-    text = text.replaceAll("]", "\n");
-    return res.send(text);
+    // var text = JSON.stringify({ blog: userBlog["blogs"] });
+    let blogs = userBlog["blogs"]
+    // const maaap = new Map(blogs.entries());
+    // const map = new Map(Object.entries(JSON.parse(blogs)));
+    let str = ""
+    blogs.map((blog, i) => {
+        str += "#"+ parseInt(i+1) + '\n'
+        str += "title: " + blog.title + '\n'
+        str += "blog: " + blog.discription + '\n'
+    })
+
+    console.log(str)
+
+    // for(let[key, values] of map){
+    //     console.log(key,values);
+
+    // }
+
+
+
+    // maaap.set(blogs)
+    // res.set({ "Content-Disposition": "attachment; filename=\"blogs.txt\"" });
+    // text = indent(text)
+    // text = text.replace(/[,"]/g, ' ');
+    // text = text.replaceAll("{", "");
+    // text = text.replaceAll("[", "");
+    // text = text.replaceAll("}", "\n");
+    // text = text.replaceAll("]", "\n");
+    return res.send(str);
 
 }
